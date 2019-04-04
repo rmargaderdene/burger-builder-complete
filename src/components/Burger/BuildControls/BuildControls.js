@@ -1,71 +1,33 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-
-import classes from "./BuildControls.css";
-import BuildControl from "./BuildControl/BuildControl";
+import React from 'react';
+import classes from './BuildControls.css';
+import BuildControl from './BuildControl/BuildControl';
 
 const controls = [
-  { label: "Salad", type: "salad" },
-  { label: "Bacon", type: "bacon" },
-  { label: "Cheese", type: "cheese" },
-  { label: "Meat", type: "meat" }
+  { label: 'Salad', type: 'salad' },
+  { label: 'Bacon', type: 'bacon' },
+  { label: 'Cheese', type: 'cheese' },
+  { label: 'Meat', type: 'meat' },
 ];
 
-class BuildControls extends Component {
-  getIngredientPrice = (prices, type) => {
-    let entity = null;
-    Object.entries(prices).forEach(([key, value]) => {
-      if (key === type) {
-        entity = value;
-      }
-    });
-    return entity;
-  };
-
-  render() {
-    const buiildControls = controls.map(control => (
-      <BuildControl
-        key={control.label}
-        label={control.label}
-        added={() =>
-          this.props.ingredientAdded(
-            control.type,
-            this.getIngredientPrice(this.props.prices, control.type)
-          )
-        }
-        removed={() =>
-          this.props.ingredientRemoved(
-            control.type,
-            this.getIngredientPrice(this.props.prices, control.type)
-          )
-        }
-        disabled={this.props.disabled[control.type]}
-      />
-    ));
-
-    return (
-      <div className={classes.BuildControls}>
-        <p>
-          Current Price: <strong>{this.props.totalPrice.toFixed(2)}</strong>
-        </p>
-        {buiildControls}
-        <button
-          className={classes.OrderButton}
-          disabled={!this.props.purchasable}
-          onClick={this.props.ordered}
-        >
-          ORDER NOW
-        </button>
-      </div>
-    );
-  }
-}
-
-const mapStateToProps = state => {
-  return {
-    prices: state.prices,
-    totalPrice: state.totalPrice
-  };
+const buildControls = (props) => {
+  return (
+    <div className={classes.BuildControls}>
+      <p>Current Price: <strong>{props.price.toFixed(2)}</strong></p>
+      {controls.map(ctrl => (
+        <BuildControl
+          key={ctrl.label}
+          labelText={ctrl.label}
+          added={() => props.ingredientAdded(ctrl.type)}
+          removed={() => props.ingredientRemoved(ctrl.type)}
+          disabled={props.disabled[ctrl.type]}
+        />
+      ))}
+      <button
+        className={classes.OrderButton}
+        disabled={!props.purchasable}
+        onClick={props.ordered}>{props.isAuth ? 'ORDER NOW' : 'SIGN UP TO ORDER' }</button>
+    </div>
+  );
 };
 
-export default connect(mapStateToProps)(BuildControls);
+export default buildControls;

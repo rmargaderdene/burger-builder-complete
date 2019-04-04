@@ -1,44 +1,42 @@
 import * as actionTypes from "./actionTypes";
 import axios from "../../axios-orders";
 
-export const addIngredient = (ingName, price) => {
+export const addIngredient = name => {
   return {
     type: actionTypes.ADD_INGREDIENT,
-    ingredientName: ingName,
-    price: price
+    ingredientName: name
   };
 };
 
-export const removeIngredient = (ingName, price) => {
+export const removeIngredient = name => {
   return {
     type: actionTypes.REMOVE_INGREDIENT,
-    ingredientName: ingName,
-    price: price
+    ingredientName: name
   };
 };
 
-export const setPrices = prices => {
+export const setIngredients = ingredients => {
   return {
-    type: actionTypes.SET_PRICES,
-    prices: prices
+    type: actionTypes.SET_INGREDIENT,
+    ingredients: ingredients
   };
 };
 
-export const fetchPricesFailed = () => {
+export const fetchIngredientsFailed = () => {
   return {
-    type: actionTypes.FETCH_PRICES_FAILED
+    type: actionTypes.FETCH_INGREDIENTS_FAILED
   };
 };
 
-export const initPrices = () => {
+export const initIngredients = () => {
   return dispatch => {
     axios
-      .get("/ingredient/prices")
+      .get("/ingredients.json")
       .then(response => {
-        dispatch(setPrices(response.data));
+        dispatch(setIngredients(response.data));
       })
       .catch(error => {
-        dispatch(fetchPricesFailed());
+        dispatch(fetchIngredientsFailed());
       });
   };
 };
