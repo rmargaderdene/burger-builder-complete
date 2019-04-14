@@ -2,6 +2,7 @@ const path = require("path");
 const autoprefixer = require("autoprefixer");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CleanWebpackPlugin = require("clean-webpack-plugin");
+const webpack = require("webpack");
 
 module.exports = {
   devtool: "cheap-module-eval-source-map",
@@ -63,6 +64,12 @@ module.exports = {
       template: __dirname + "/public/index.html",
       filename: "index.html",
       inject: "body"
+    }),
+    new webpack.DefinePlugin({
+      "process.env": {
+        NODE_ENV: JSON.stringify("development"),
+        API_URL: JSON.stringify("http://localhost:8080/")
+      }
     })
   ]
 };

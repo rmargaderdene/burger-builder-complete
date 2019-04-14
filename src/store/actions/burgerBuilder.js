@@ -31,12 +31,38 @@ export const fetchIngredientsFailed = () => {
 export const initIngredients = () => {
   return dispatch => {
     axios
-      .get("/ingredients.json")
+      .get("/ingredients/numbers")
       .then(response => {
         dispatch(setIngredients(response.data));
       })
       .catch(error => {
         dispatch(fetchIngredientsFailed());
+      });
+  };
+};
+
+export const setIngredientPrices = prices => {
+  return {
+    type: actionTypes.SET_INGREDIENT_PRICES,
+    prices: prices
+  };
+};
+
+export const fetchIngredientPricesFailed = () => {
+  return {
+    type: actionTypes.FETCH_INGREDIENTS_PRICES_FAILED
+  };
+};
+
+export const initIngredientPrices = () => {
+  return dispatch => {
+    axios
+      .get("/ingredients/prices")
+      .then(response => {
+        dispatch(setIngredientPrices(response.data));
+      })
+      .catch(error => {
+        dispatch(fetchIngredientPricesFailed());
       });
   };
 };
