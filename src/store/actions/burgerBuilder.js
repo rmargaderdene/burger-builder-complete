@@ -31,7 +31,7 @@ export const fetchIngredientsFailed = () => {
 export const initIngredients = () => {
   return dispatch => {
     axios
-      .get("/ingredients/numbers")
+      .get("/public/ingredients/numbers")
       .then(response => {
         dispatch(setIngredients(response.data));
       })
@@ -57,7 +57,7 @@ export const fetchIngredientPricesFailed = () => {
 export const initIngredientPrices = () => {
   return dispatch => {
     axios
-      .get("/ingredients/prices")
+      .get("/public/ingredients/prices")
       .then(response => {
         dispatch(setIngredientPrices(response.data));
       })
