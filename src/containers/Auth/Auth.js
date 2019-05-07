@@ -66,8 +66,7 @@ class Auth extends Component {
         valid: false,
         touched: false
       }
-    },
-    isSignup: true
+    }
   };
 
   componentDidMount() {
@@ -97,14 +96,8 @@ class Auth extends Component {
       this.state.controls.firstname.value,
       this.state.controls.password.value,
       this.state.controls.confirmPassword.value,
-      this.state.isSignup
+      this.props.isSignup
     );
-  };
-
-  switchAuthModeHandler = () => {
-    this.setState(prevState => {
-      return { isSignup: !prevState.isSignup };
-    });
   };
 
   render() {
@@ -119,7 +112,7 @@ class Auth extends Component {
     let form = formElementsArray.map(formElement => {
       if (
         ["firstname", "confirmPassword"].includes(formElement.id) &&
-        !this.state.isSignup
+        !this.props.isSignup
       ) {
         return null;
       }
@@ -142,16 +135,15 @@ class Auth extends Component {
       form = <Spinner />;
     }
 
-    let errorMessage = null;
-    if (this.props.error) {
-      errorMessage = <p>{this.props.error.message}</p>;
-    }
+    let errorMessage = Object.keys(this.props.error).map(msgKey => (
+      <p key={msgKey}>{this.props.error[msgKey]}</p>
+    ));
 
     let authRedirect = null;
     if (this.props.isAuthenticated) {
       if (this.props.buildingBurger) {
         //authRedirect = <Redirect to='/checkout'/>
-        authRedirect = <Redirect to={this.props.authRedirecPath} />;
+        authRedirect = <Redirect to={this.props.authRedirectPath} />;
       } else {
         authRedirect = <Redirect to="/" />;
       }
@@ -165,8 +157,8 @@ class Auth extends Component {
           {form}
           <Button btnType="Success">SUBMIT</Button>
         </form>
-        <Button clicked={this.switchAuthModeHandler} btnType="Danger">
-          SWITCH TO {this.state.isSignup ? "SIGNIN" : "SIGNUP"}
+        <Button clicked={this.props.onChangeIsSignup} btnType="Danger">
+          SWITCH TO {this.props.isSignup ? "SIGNIN" : "SIGNUP"}
         </Button>
       </div>
     );
@@ -179,7 +171,8 @@ const mapStateToProps = state => {
     error: state.auth.error,
     isAuthenticated: state.auth.token !== null,
     buildingBurger: state.burgerBuilder.building,
-    authRedirectPath: state.auth.authRedirecPath
+    authRedirectPath: state.auth.authRedirectPath,
+    isSignup: state.auth.isSignup
   };
 };
 
@@ -189,7 +182,8 @@ const mapDispatchToProps = dispatch => {
       dispatch(
         actions.auth(email, firstname, password, confirmPassword, isSignup)
       ),
-    onSetAuthRedirectPath: () => dispatch(actions.setAuthRedirectPath("/"))
+    onSetAuthRedirectPath: () => dispatch(actions.setAuthRedirectPath("/")),
+    onChangeIsSignup: () => dispatch(actions.changeIsSignup())
   };
 };
 

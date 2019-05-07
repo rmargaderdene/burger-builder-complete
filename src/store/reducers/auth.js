@@ -3,20 +3,22 @@ import { updateObject } from "../../shared/utility";
 
 const initialState = {
   token: null,
-  error: null,
+  error: {},
   loading: false,
-  authRedirectPath: "/"
+  authRedirectPath: "/",
+  isSignup: false
 };
 
 const authStart = (state, action) => {
-  return updateObject(state, { error: null, loading: true });
+  return updateObject(state, { error: {}, loading: true });
 };
 
 const authSuccess = (state, action) => {
   return updateObject(state, {
     token: action.token,
-    error: null,
-    loading: false
+    error: {},
+    loading: false,
+    isSignup: false
   });
 };
 
@@ -35,6 +37,10 @@ const setAuthRedirectPath = (state, action) => {
   return updateObject(state, { authRedirectPath: action.path });
 };
 
+const changeIsSignup = (state, action) => {
+  return updateObject(state, { isSignup: !state.isSignup });
+};
+
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.AUTH_START:
@@ -47,6 +53,8 @@ const reducer = (state = initialState, action) => {
       return authLogout(state, action);
     case actionTypes.SET_AUTH_REDIRECT_PATH:
       return setAuthRedirectPath(state, action);
+    case actionTypes.CHANGE_ISSIGNUP:
+      return changeIsSignup(state, action);
     default:
       return state;
   }

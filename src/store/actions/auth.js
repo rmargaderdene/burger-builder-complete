@@ -39,19 +39,17 @@ export const auth = (email, firstname, password, confirmPassword, isSignup) => {
       url += "/users/register";
     }
 
-    // console.log(authData);
-
     axios
       .post(url, authData)
       .then(response => {
-        console.log(response);
-        localStorage.setItem("token", response.data.token);
-        localStorage.setItem("expirationTime", expirationTime);
-        dispatch(authSuccess(response.data.token));
-        dispatch(checkAuthTimeout(response.data.expirationTime));
+        if (!isSignup) {
+          localStorage.setItem("token", response.data.token);
+          localStorage.setItem("expirationTime", response.data.expirationTime);
+          dispatch(checkAuthTimeout(response.data.expirationTime));
+        }
+        dispatch(authSuccess(!isSignup ? response.data.token : null));
       })
       .catch(err => {
-        console.log(err);
         dispatch(authFail(err.response.data));
       });
   };
@@ -61,6 +59,12 @@ export const setAuthRedirectPath = path => {
   return {
     type: actionTypes.SET_AUTH_REDIRECT_PATH,
     path: path
+  };
+};
+
+export const changeIsSignup = () => {
+  return {
+    type: actionTypes.CHANGE_ISSIGNUP
   };
 };
 
@@ -76,7 +80,7 @@ export const checkAuthTimeout = expirationTime => {
   return dispatch => {
     setTimeout(() => {
       dispatch(logout());
-    }, expirationTime * 1000);
+    }, expirationTime);
   };
 };
 
