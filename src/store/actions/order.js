@@ -1,5 +1,6 @@
 import * as actionTypes from "./actionTypes";
 import axios from "../../axios-orders";
+import 'babel-polyfill';
 
 export const purchaseBurgerSuccess = (id, orderData) => {
   return {
@@ -23,7 +24,7 @@ export const purchaseBurgerStart = () => {
 };
 
 export const purchaseBurger = (orderData, token) => {
-  return dispatch => {
+  return async dispatch => {
     dispatch(purchaseBurgerStart());
     let ingArray = Object.keys(orderData.ingredients).map(key => {
       return { name: key, number: orderData.ingredients[key] };
@@ -31,7 +32,7 @@ export const purchaseBurger = (orderData, token) => {
     // console.log(ingArray);
     orderData.ingredients = ingArray;
     // console.log(orderData);
-    axios
+    await axios
       .post("/orders", orderData)
       .then(response => {
         console.log(response);
@@ -70,11 +71,11 @@ export const fetchOrderStart = () => {
 };
 
 export const fetchOrders = (token, userId) => {
-  return dispatch => {
+  return async dispatch => {
     dispatch(fetchOrderStart());
     const queryParams =
       "?auth=" + token + '&orderBy="userId"&equalTo="' + userId + '"';
-    axios
+    await axios
       .get("/orders.json" + queryParams)
       .then(res => {
         const fetchedOrders = [];

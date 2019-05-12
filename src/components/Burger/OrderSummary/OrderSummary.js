@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import Button from '../../UI/Button/Button';
 
-const ordersummary = (props) => {
+const ordersummary = props => {
     const ingredientsSummary = Object.keys(props.ingredients)
         .map(igKey => {
             return (<li key={igKey}>

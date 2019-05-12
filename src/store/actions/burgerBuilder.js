@@ -1,5 +1,6 @@
 import * as actionTypes from "./actionTypes";
 import axios from "../../axios-orders";
+import 'babel-polyfill';
 
 export const addIngredient = name => {
   return {
@@ -29,8 +30,8 @@ export const fetchIngredientsFailed = () => {
 };
 
 export const initIngredients = () => {
-  return dispatch => {
-    axios
+  return async dispatch => {
+    await axios
       .get("/public/ingredients/numbers")
       .then(response => {
         dispatch(setIngredients(response.data));
@@ -55,8 +56,8 @@ export const fetchIngredientPricesFailed = () => {
 };
 
 export const initIngredientPrices = () => {
-  return dispatch => {
-    axios
+  return async dispatch => {
+    await axios
       .get("/public/ingredients/prices")
       .then(response => {
         dispatch(setIngredientPrices(response.data));

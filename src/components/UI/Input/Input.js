@@ -1,7 +1,7 @@
 import React from 'react';
 import classes from './Input.css';
 
-const InputVal = (props) => {
+const InputVal = props => {
     let inputElement = null;
     const inputClasses = [classes.InputElement];
 

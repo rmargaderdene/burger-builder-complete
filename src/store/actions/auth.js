@@ -1,4 +1,5 @@
 import axios from "axios";
+import 'babel-polyfill';
 
 import * as actionTypes from "./actionTypes";
 
@@ -22,8 +23,8 @@ export const authFail = error => {
   };
 };
 
-export const auth = (email, firstname, password, confirmPassword, isSignup) => {
-  return dispatch => {
+export const auth =  (email, firstname, password, confirmPassword, isSignup) => {
+  return async dispatch => {
     dispatch(authStart());
     const authData = {
       username: email,
@@ -39,8 +40,7 @@ export const auth = (email, firstname, password, confirmPassword, isSignup) => {
       url += "/users/register";
     }
 
-    axios
-      .post(url, authData)
+     await axios.post(url, authData)
       .then(response => {
         if (!isSignup) {
           localStorage.setItem("token", response.data.token);
